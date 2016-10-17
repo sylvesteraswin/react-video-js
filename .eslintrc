@@ -10,7 +10,7 @@
     "curly": [1, "multi-line"],
     "camelcase": 0,
     "comma-dangle": [1, "always-multiline"],
-    "no-console": 2,
+    "no-console": 0,
     "no-use-before-define": [1, "nofunc"],
     "no-underscore-dangle": 0,
     "no-unused-vars": 1,

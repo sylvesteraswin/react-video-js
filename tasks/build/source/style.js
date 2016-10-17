@@ -12,7 +12,7 @@ module.exports = () => {
       'src/*.scss'
     ])
     .pipe(sass({
-      outputStyle: 'compressed'
+    //   outputStyle: 'compressed'
     }).on('error', sass.logError))
     .pipe(autoprefixer({
       browsers: [

@@ -1,0 +1,82 @@
+@import "node_modules/video.js/src/css/video-js";
+
+$base-class: zvui-product-video;
+$vjs-base-class: vjs;
+
+.#{$base-class} {
+    margin: 0 auto;
+
+    &.video {
+        &-js {
+            &:hover {
+                .#{$vjs-base-class}-big-play-button {
+                    background-color: rgba(#fff, 1)
+                }
+            }
+        }
+    }
+
+    &.#{$vjs-base-class}-playing {
+        &:hover {
+            .#{$vjs-base-class} {
+                &-big-play-button {
+                    display: block !important;
+                    opacity: .2;
+                    &:before {
+                        content: '\f103';
+                    }
+                }
+            }
+        }
+    }
+
+    .#{$vjs-base-class} {
+        &-poster {
+            background-size: cover;
+        }
+        &-has-ended {
+            .#{$vjs-base-class} {
+                &-big-play-button {
+                    display: block;
+                }
+            }
+        }
+        &-big-play-button {
+            border-radius: 50%;
+            width: 2em;
+            height: 2em;
+            line-height: 2em;
+            background-color: rgba(#fff, .7);
+            transition: background-color .3s ease;
+            border: none;
+            color: #333;
+            &:hover {
+                background-color: rgba(#fff, 1)
+            }
+        }
+
+        &-control-bar {
+            height: 1em;
+        }
+        &-progress-holder {
+            height: 1em;
+        }
+        &-slider {
+            margin: 0;
+            background-color: rgba(#000, .1);
+            .#{$vjs-base-class} {
+                &-play-progress,
+                &-load-progress {
+                    background-color: rgba(#000, .1);
+                    height: 1em;
+                }
+                &-play-progress {
+                    background-color: #000;
+                    &:before {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -16,6 +16,9 @@
   "exampleConfig": {
     "containerID": "container"
   },
+  "publishConfig": {
+    "registry": "http://registry.npmjs.org/"
+  },
   "scripts": {
     "start": "NODE_ENV=production gulp"
   },
@@ -25,12 +28,11 @@
   },
   "keywords": [
     "react",
-    "carousel",
-    "react-carousel",
+    "video",
+    "react-video-js",
     "react-component",
-    "react-gallery",
-    "react slideshow",
-    "react gallery"
+    "react video",
+    "videojs"
   ],
   "author": "Sylvester Aswin",
   "license": "MIT",
@@ -111,6 +113,7 @@
   },
   "precommit": [],
   "dependencies": {
-    "classnames": "^2.2.5"
+    "classnames": "^2.2.5",
+    "video.js": "^5.11.7"
   }
 }
