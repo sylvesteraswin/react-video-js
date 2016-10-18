@@ -158,10 +158,9 @@ class ProductVideo extends Component {
         } = this.props;
 
         this._player.on('play', () => {
+            this._player.posterImage.hide();
+            this._player.controlBar.show();
             this._elToggle('bigPlayButton', false);
-
-            this._elToggle('posterImage', false);
-
             this._elToggle('_zvuiBigPauseButton', true);
 
             if (onPlay && typeof onPlay === 'function') {
@@ -170,6 +169,7 @@ class ProductVideo extends Component {
         });
 
         this._player.on('pause', () => {
+            this._player.controlBar.hide();
             this._elToggle('bigPlayButton', true);
             this._elToggle('_zvuiBigPauseButton', false);
 
@@ -179,9 +179,9 @@ class ProductVideo extends Component {
         });
 
         this._player.on('ended', () => {
+            this._player.posterImage.show();
+            this._player.controlBar.hide();
             this._elToggle('bigPlayButton', true);
-
-            this._elToggle('posterImage', true);
 
             if (!loop && onEnded && typeof onEnded === 'function') {
                 onEnded.call(this, this._player);

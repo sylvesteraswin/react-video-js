@@ -238,10 +238,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var loop = _this$props3.loop;
 
 	            _this._player.on('play', function () {
+	                _this._player.posterImage.hide();
+	                _this._player.controlBar.show();
 	                _this._elToggle('bigPlayButton', false);
-
-	                _this._elToggle('posterImage', false);
-
 	                _this._elToggle('_zvuiBigPauseButton', true);
 
 	                if (onPlay && typeof onPlay === 'function') {
@@ -250,6 +249,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            });
 
 	            _this._player.on('pause', function () {
+	                _this._player.controlBar.hide();
 	                _this._elToggle('bigPlayButton', true);
 	                _this._elToggle('_zvuiBigPauseButton', false);
 
@@ -259,9 +259,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            });
 
 	            _this._player.on('ended', function () {
+	                _this._player.posterImage.show();
+	                _this._player.controlBar.hide();
 	                _this._elToggle('bigPlayButton', true);
-
-	                _this._elToggle('posterImage', true);
 
 	                if (!loop && onEnded && typeof onEnded === 'function') {
 	                    onEnded.call(_this, _this._player);
