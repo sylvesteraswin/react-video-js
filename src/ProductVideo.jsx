@@ -216,6 +216,7 @@ class ProductVideo extends Component {
             onPlay,
             onPause,
             loop,
+            onReady,
         } = this.props;
 
         const player = this._getProductPlayer();
@@ -252,6 +253,10 @@ class ProductVideo extends Component {
                 onEnded.call(this, player);
             }
         });
+
+        if (onReady && typeof onReady === 'function') {
+            onReady.call(this, player);
+        }
     };
 
     _getResizeOption = () => {
