@@ -7,7 +7,8 @@ import classnames from 'classnames';
 import addEvent from './utils/add-event-listener';
 import removeEvent from './utils/remove-event-listener';
 
-import ZvUiBigPlayButton from './components/zvuiBigPlayButton';
+import ZvuiBigPlayButton from './components/zvuiBigPlayButton';
+import ZvuiHDButton from './components/zvuiHDButton';
 
 const BASE_CLASS = 'zvui-product-video';
 const VJS_BASE_CLASS= 'video-js';
@@ -40,14 +41,16 @@ const VJS_FRAMEWORK_DEFAULT = {
         chaptersButton: false,
         descriptionsButton: false,
         subtitlesButton: false,
-    }
+    },
 };
 
 const NOOP = () => {};
 
 
 class ProductVideo extends Component {
-    state = {};
+    state = {
+        showingHD: false,
+    };
 
     static defaultProps = {
         uid: '',
@@ -83,7 +86,7 @@ class ProductVideo extends Component {
             source: newSource = '',
         } = nextProps;
 
-        if ((newSource !== oldSource) && (oldSource !== '')) {
+        if ((newSource !== oldSource) && (newSource !== '')) {
             this._updatePlayerSrc(newSource);
         }
     };
@@ -93,7 +96,7 @@ class ProductVideo extends Component {
     };
 
     componentWillUnMount = () => {
-
+        this.unloadPlayer();
     };
 
     _buildPlayerOptions = () => {
@@ -113,6 +116,29 @@ class ProductVideo extends Component {
             height: resize ? 'auto' : (height || defaultHeight),
             width: resize ? 'auto' : (width || defaultWidth),
         });
+    };
+
+    _updateToHD = () => {
+        const {
+            showingHD,
+        } = this.state;
+
+        const {
+            source,
+            sourceHD,
+        } = this.props;
+
+        if (sourceHD && !showingHD) {
+            this._updatePlayerSrc(sourceHD);
+            this.setState({
+                showingHD: true,
+            });
+        } else {
+            this._updatePlayerSrc(source);
+            this.setState({
+                showingHD: false,
+            });
+        }
     };
 
     _updatePlayerSrc = (source) => {
@@ -136,7 +162,7 @@ class ProductVideo extends Component {
 
             this._elToggle('posterImage', false);
 
-            this._elToggle('_zvuiButton', true);
+            this._elToggle('_zvuiBigPauseButton', true);
 
             if (onPlay && typeof onPlay === 'function') {
                 onPlay.call(this, this._player);
@@ -145,7 +171,7 @@ class ProductVideo extends Component {
 
         this._player.on('pause', () => {
             this._elToggle('bigPlayButton', true);
-            this._elToggle('_zvuiButton', false);
+            this._elToggle('_zvuiBigPauseButton', false);
 
             if (onPause && typeof onPause === 'function') {
                 onPause.call(this, this._player);
@@ -172,8 +198,8 @@ class ProductVideo extends Component {
 
         const {
             [obj]: {
-                el_: targetParentEl = null
-            } = {}
+                el_: targetParentEl = null,
+            } = {},
         } = this;
 
         if (targetEl) {
@@ -188,8 +214,17 @@ class ProductVideo extends Component {
     insertComponents = () => {
         const player = this.getProductPlayer();
 
-        this._zvuiButton = new ZvUiBigPlayButton(this._player);
-        this._player.addChild(this._zvuiButton);
+        const {
+            sourceHD,
+        } = this.props;
+
+        this._zvuiBigPauseButton = new ZvuiBigPlayButton(player);
+        player.addChild(this._zvuiBigPauseButton);
+
+        if (sourceHD) {
+            this._zvuiHDButton = new ZvuiHDButton(this);
+            player.addChild(this._zvuiHDButton);
+        }
     };
 
     setUpPlayer = () => {
@@ -226,7 +261,6 @@ class ProductVideo extends Component {
 
     render = () => {
         const {
-            children,
             skin,
             customSkinClass,
             bigPlayButton,
@@ -247,17 +281,15 @@ class ProductVideo extends Component {
                     [VJS_CENTER_PLAY_CLASS]: bigPlayButton,
                 })}
                 poster={poster || null}
-                >
-                {children}
-            </video>
+                />
         );
     };
 }
 
 ProductVideo.propTypes = {
-    source: PropTypes.string,
+    source: PropTypes.string.string,
+    sourceHD: PropTypes.string,
     poster: PropTypes.string,
-    children: PropTypes.element,
     skin: PropTypes.string,
     bigPlayButton: PropTypes.bool,
     customSkinClass: PropTypes.string,

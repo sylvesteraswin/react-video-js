@@ -90,6 +90,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _zvuiBigPlayButton2 = _interopRequireDefault(_zvuiBigPlayButton);
 
+	var _zvuiHDButton = __webpack_require__(8);
+
+	var _zvuiHDButton2 = _interopRequireDefault(_zvuiHDButton);
+
 	function _interopRequireDefault(obj) {
 	    return obj && obj.__esModule ? obj : { default: obj };
 	}
@@ -172,7 +176,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            args[_key] = arguments[_key];
 	        }
 
-	        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = ProductVideo.__proto__ || Object.getPrototypeOf(ProductVideo)).call.apply(_ref, [this].concat(args))), _this), _this.state = {}, _this.componentWillMount = function () {
+	        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = ProductVideo.__proto__ || Object.getPrototypeOf(ProductVideo)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+	            showingHD: false
+	        }, _this.componentWillMount = function () {
 	            _this.setState({
 	                uid: _this.getRandomID()
 	            });
@@ -184,10 +190,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var _nextProps$source = nextProps.source;
 	            var newSource = _nextProps$source === undefined ? '' : _nextProps$source;
 
-	            if (newSource !== oldSource && oldSource !== '') {
+	            if (newSource !== oldSource && newSource !== '') {
 	                _this._updatePlayerSrc(newSource);
 	            }
-	        }, _this.shouldComponentUpdate = function () {}, _this.componentWillUnMount = function () {}, _this._buildPlayerOptions = function () {
+	        }, _this.shouldComponentUpdate = function () {}, _this.componentWillUnMount = function () {
+	            _this.unloadPlayer();
+	        }, _this._buildPlayerOptions = function () {
 	            var _this$props = _this.props;
 	            var options = _this$props.options;
 	            var resize = _this$props.resize;
@@ -200,24 +208,41 @@ return /******/ (function(modules) { // webpackBootstrap
 	                height: resize ? 'auto' : height || defaultHeight,
 	                width: resize ? 'auto' : width || defaultWidth
 	            });
+	        }, _this._updateToHD = function () {
+	            var showingHD = _this.state.showingHD;
+	            var _this$props2 = _this.props;
+	            var source = _this$props2.source;
+	            var sourceHD = _this$props2.sourceHD;
+
+	            if (sourceHD && !showingHD) {
+	                _this._updatePlayerSrc(sourceHD);
+	                _this.setState({
+	                    showingHD: true
+	                });
+	            } else {
+	                _this._updatePlayerSrc(source);
+	                _this.setState({
+	                    showingHD: false
+	                });
+	            }
 	        }, _this._updatePlayerSrc = function (source) {
 	            var _this2 = _this;
 	            var _player = _this2._player;
 
 	            _player.src(source);
 	        }, _this._playerReady = function () {
-	            var _this$props2 = _this.props;
-	            var onEnded = _this$props2.onEnded;
-	            var onPlay = _this$props2.onPlay;
-	            var onPause = _this$props2.onPause;
-	            var loop = _this$props2.loop;
+	            var _this$props3 = _this.props;
+	            var onEnded = _this$props3.onEnded;
+	            var onPlay = _this$props3.onPlay;
+	            var onPause = _this$props3.onPause;
+	            var loop = _this$props3.loop;
 
 	            _this._player.on('play', function () {
 	                _this._elToggle('bigPlayButton', false);
 
 	                _this._elToggle('posterImage', false);
 
-	                _this._elToggle('_zvuiButton', true);
+	                _this._elToggle('_zvuiBigPauseButton', true);
 
 	                if (onPlay && typeof onPlay === 'function') {
 	                    onPlay.call(_this, _this._player);
@@ -226,7 +251,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            _this._player.on('pause', function () {
 	                _this._elToggle('bigPlayButton', true);
-	                _this._elToggle('_zvuiButton', false);
+	                _this._elToggle('_zvuiBigPauseButton', false);
 
 	                if (onPause && typeof onPause === 'function') {
 	                    onPause.call(_this, _this._player);
@@ -263,15 +288,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }, _this.insertComponents = function () {
 	            var player = _this.getProductPlayer();
 
-	            _this._zvuiButton = new _zvuiBigPlayButton2.default(_this._player);
-	            _this._player.addChild(_this._zvuiButton);
+	            var sourceHD = _this.props.sourceHD;
+
+	            _this._zvuiBigPauseButton = new _zvuiBigPlayButton2.default(player);
+	            player.addChild(_this._zvuiBigPauseButton);
+
+	            if (sourceHD) {
+	                _this._zvuiHDButton = new _zvuiHDButton2.default(_this);
+	                player.addChild(_this._zvuiHDButton);
+	            }
 	        }, _this.setUpPlayer = function () {
-	            var _this$props3 = _this.props;
-	            var source = _this$props3.source;
-	            var onEnded = _this$props3.onEnded;
-	            var onPlay = _this$props3.onPlay;
-	            var onPause = _this$props3.onPause;
-	            var loop = _this$props3.loop;
+	            var _this$props4 = _this.props;
+	            var source = _this$props4.source;
+	            var onEnded = _this$props4.onEnded;
+	            var onPlay = _this$props4.onPlay;
+	            var onPause = _this$props4.onPause;
+	            var loop = _this$props4.loop;
 
 	            var options = _this._buildPlayerOptions();
 
@@ -293,12 +325,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }, _this.render = function () {
 	            var _classnames;
 
-	            var _this$props4 = _this.props;
-	            var children = _this$props4.children;
-	            var skin = _this$props4.skin;
-	            var customSkinClass = _this$props4.customSkinClass;
-	            var bigPlayButton = _this$props4.bigPlayButton;
-	            var poster = _this$props4.poster;
+	            var _this$props5 = _this.props;
+	            var skin = _this$props5.skin;
+	            var customSkinClass = _this$props5.customSkinClass;
+	            var bigPlayButton = _this$props5.bigPlayButton;
+	            var poster = _this$props5.poster;
 	            var uid = _this.state.uid;
 
 	            return _react2.default.createElement('video', {
@@ -306,7 +337,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                id: BASE_CLASS + '-' + uid,
 	                className: (0, _classnames3.default)(BASE_CLASS, VJS_BASE_CLASS, (_classnames = {}, _defineProperty(_classnames, VJS_DEFAULT_SKIN_CLASS, skin === 'default'), _defineProperty(_classnames, customSkinClass, skin !== 'default'), _defineProperty(_classnames, VJS_CENTER_PLAY_CLASS, bigPlayButton), _classnames)),
 	                poster: poster || null
-	            }, children);
+	            });
 	        }, _temp), _possibleConstructorReturn(_this, _ret);
 	    }
 
@@ -329,9 +360,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	ProductVideo.propTypes = {
-	    source: _react.PropTypes.string,
+	    source: _react.PropTypes.string.string,
+	    sourceHD: _react.PropTypes.string,
 	    poster: _react.PropTypes.string,
-	    children: _react.PropTypes.element,
 	    skin: _react.PropTypes.string,
 	    bigPlayButton: _react.PropTypes.bool,
 	    customSkinClass: _react.PropTypes.string,
@@ -25014,26 +25045,25 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var Button = _video2.default.getComponent('Button');
 
-	var ZvUiBigPlayButton = function (_Button) {
-	    _inherits(ZvUiBigPlayButton, _Button);
+	var ZvuiBigPlayButton = function (_Button) {
+	    _inherits(ZvuiBigPlayButton, _Button);
 
-	    function ZvUiBigPlayButton(player, options) {
-	        _classCallCheck(this, ZvUiBigPlayButton);
+	    function ZvuiBigPlayButton(player, options) {
+	        _classCallCheck(this, ZvuiBigPlayButton);
 
-	        return _possibleConstructorReturn(this, (ZvUiBigPlayButton.__proto__ || Object.getPrototypeOf(ZvUiBigPlayButton)).call(this, player, options));
+	        return _possibleConstructorReturn(this, (ZvuiBigPlayButton.__proto__ || Object.getPrototypeOf(ZvuiBigPlayButton)).call(this, player, options));
 	    }
 
-	    _createClass(ZvUiBigPlayButton, [{
+	    _createClass(ZvuiBigPlayButton, [{
 	        key: 'createEl',
 	        value: function createEl() {
 
-	            return _get(ZvUiBigPlayButton.prototype.__proto__ || Object.getPrototypeOf(ZvUiBigPlayButton.prototype), 'createEl', this).call(this, 'button', {
-	                name: 'ZvUiBigPlayButton',
-	                id: 'zvui-video-button',
-	                className: 'zvui-video-button',
+	            return _get(ZvuiBigPlayButton.prototype.__proto__ || Object.getPrototypeOf(ZvuiBigPlayButton.prototype), 'createEl', this).call(this, 'button', {
+	                name: 'ZvuiBigPlayButton',
+	                id: 'zvui-video-pause-button',
+	                className: 'zvui-video-pause-button',
 	                title: 'Play Toggle',
-	                role: 'button',
-	                controlText_: 'Hello'
+	                role: 'button'
 	            });
 	        }
 	    }, {
@@ -25044,13 +25074,122 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    }]);
 
-	    return ZvUiBigPlayButton;
+	    return ZvuiBigPlayButton;
 	}(Button);
 
-	// ZvUiBigPlayButton.prototype.controlText_ = 'Play Toggle';
+	// ZvuiBigPlayButton.prototype.controlText_ = 'Play Toggle';
 
-	_video2.default.registerComponent('ZvUiBigPlayButton', ZvUiBigPlayButton);
-	exports.default = ZvUiBigPlayButton;
+	_video2.default.registerComponent('ZvuiBigPlayButton', ZvuiBigPlayButton);
+	exports.default = ZvuiBigPlayButton;
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () {
+	    function defineProperties(target, props) {
+	        for (var i = 0; i < props.length; i++) {
+	            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+	        }
+	    }return function (Constructor, protoProps, staticProps) {
+	        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+	    };
+	}();
+
+	var _get = function get(object, property, receiver) {
+	    if (object === null) object = Function.prototype;var desc = Object.getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+	        var parent = Object.getPrototypeOf(object);if (parent === null) {
+	            return undefined;
+	        } else {
+	            return get(parent, property, receiver);
+	        }
+	    } else if ("value" in desc) {
+	        return desc.value;
+	    } else {
+	        var getter = desc.get;if (getter === undefined) {
+	            return undefined;
+	        }return getter.call(receiver);
+	    }
+	};
+
+	var _video = __webpack_require__(3);
+
+	var _video2 = _interopRequireDefault(_video);
+
+	function _interopRequireDefault(obj) {
+	    return obj && obj.__esModule ? obj : { default: obj };
+	}
+
+	function _classCallCheck(instance, Constructor) {
+	    if (!(instance instanceof Constructor)) {
+	        throw new TypeError("Cannot call a class as a function");
+	    }
+	}
+
+	function _possibleConstructorReturn(self, call) {
+	    if (!self) {
+	        throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+	    }return call && ((typeof call === "undefined" ? "undefined" : _typeof(call)) === "object" || typeof call === "function") ? call : self;
+	}
+
+	function _inherits(subClass, superClass) {
+	    if (typeof superClass !== "function" && superClass !== null) {
+	        throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : _typeof(superClass)));
+	    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+	}
+
+	var Button = _video2.default.getComponent('Button');
+
+	var ZvuiHDButton = function (_Button) {
+	    _inherits(ZvuiHDButton, _Button);
+
+	    function ZvuiHDButton(player, options) {
+	        _classCallCheck(this, ZvuiHDButton);
+
+	        return _possibleConstructorReturn(this, (ZvuiHDButton.__proto__ || Object.getPrototypeOf(ZvuiHDButton)).call(this, player, options));
+	    }
+
+	    _createClass(ZvuiHDButton, [{
+	        key: 'createEl',
+	        value: function createEl() {
+
+	            return _get(ZvuiHDButton.prototype.__proto__ || Object.getPrototypeOf(ZvuiHDButton.prototype), 'createEl', this).call(this, 'button', {
+	                name: 'ZvuiHDButton',
+	                id: 'zvui-video-hd-button',
+	                className: 'zvui-video-hd-button',
+	                title: 'Show HD',
+	                role: 'button'
+	            });
+	        }
+	    }, {
+	        key: 'handleClick',
+	        value: function handleClick() {
+	            var container = this.player();
+	            var className = this.el_.className;
+
+	            console.log(className);
+	            if (!className.includes('active')) {
+	                this.addClass('active');
+	            } else {
+	                this.removeClass('active');
+	            }
+	            container._updateToHD();
+
+	            container._player.play();
+	        }
+	    }]);
+
+	    return ZvuiHDButton;
+	}(Button);
+
+	_video2.default.registerComponent('ZvuiHDButton', ZvuiHDButton);
+	exports.default = ZvuiHDButton;
 
 /***/ }
 /******/ ])

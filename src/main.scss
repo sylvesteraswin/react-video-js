@@ -19,35 +19,64 @@ $vjs-base-class: vjs;
 
     &.#{$vjs-base-class}-playing {
         &:hover {
-            .zvui-video-button {
-                display: block !important;
-                opacity: .3;
+            .zvui-video {
+                &-pause-button {
+                    display: block !important;
+                    opacity: .3;
+                }
+                &-hd-button {
+                    display: block;
+                }
+
             }
         }
     }
 
-    .zvui-video-button {
-        font-size: 3em;
-        line-height: 1.5em;
-        height: 1.5em;
-        width: 3em;
-        display: none;
-        position: absolute;
-        padding: 0;
-        cursor: pointer;
-        opacity: 1;
-        border-radius: .3em;
-        transition: all .4s;
-        opacity: .2;
-        @extend .vjs-big-play-button;
-        top: 50%;
-        left: 50%;
-        display: none;
-        margin-top: -.75em;
-        margin-left: -1.5em;
-        font-family: 'VideoJS';
-        &:before {
-            content: "\f103"
+    .zvui-video {
+        &-pause-button,
+        &-hd-button {
+            display: none;
+            position: absolute;
+            padding: 0;
+            cursor: pointer;
+            opacity: 1;
+            border-radius: .3em;
+            transition: opacity .4s;
+            opacity: .2;
+            margin-top: -.75em;
+            margin-left: -1.5em;
+            font-family: 'VideoJS';
+        }
+        &-pause-button {
+            font-size: 3em;
+            line-height: 1.5em;
+            height: 1.5em;
+            width: 3em;
+            @extend .vjs-big-play-button;
+            top: 50%;
+            left: 50%;
+            &:before {
+                content: "\f103"
+            }
+        }
+
+        &-hd-button {
+            font-size: 3em;
+            line-height: 1em;
+            height: 1em;
+            width: 1em;
+            opacity: .4;
+            display: none;
+            right: 10px;
+            top: 10px;
+            margin: 0;
+            color: #000;
+            &.active {
+                opacity: 1;
+            }
+            &:before {
+                content: "\f114"
+            }
         }
     }
 

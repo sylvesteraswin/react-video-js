@@ -16,6 +16,7 @@ class App extends Component {
                 <ProductVideo
                     ref={i => this.pv = i}
                     source="https://s3-eu-central-1.amazonaws.com/zalando-vegas-static/media/4054789152470_LQ.mp4"
+                    sourceHD="https://s3-eu-central-1.amazonaws.com/zalando-vegas-static/media/4054789152470_HQ.mp4"
                     poster="https://s3-eu-central-1.amazonaws.com/zalando-vegas-static/media/4054789152470.jpg"
                     onEnded={this._handleOnEnded}
                     onPlay={this._handleOnEnded}
