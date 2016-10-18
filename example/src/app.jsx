@@ -15,11 +15,11 @@ class App extends Component {
                 className="app">
                 <ProductVideo
                     ref={i => this.pv = i}
-                    source="https://s3-eu-central-1.amazonaws.com/zalando-vegas-static/media/4054789152470_LQ.mp4"
-                    sourceHD="https://s3-eu-central-1.amazonaws.com/zalando-vegas-static/media/4054789152470_HQ.mp4"
-                    poster="https://s3-eu-central-1.amazonaws.com/zalando-vegas-static/media/4054789152470.jpg"
+                    source="https://dl.dropboxusercontent.com/u/8725581/99B170E9-5D1C-49C5-A87F-1123679F3618.MOV"
                     onEnded={this._handleOnEnded}
                     onPlay={this._handleOnEnded}
+                    width={640}
+                    height={360}
                     onPause={this._handleOnEnded} />
             </section>
         );
