@@ -7,6 +7,31 @@ $vjs-base-class: vjs;
 .#{$base-class} {
     margin: 0 auto;
 
+    /* This used to work for parent element of button divs */
+
+    /* But it is not enough now, below dont hide play button parent div */
+
+    // *::-webkit-media-controls-panel {
+    //   display: none!important;
+    //   -webkit-appearance: none;
+    // }
+
+    /* Old shadow dom for play button */
+
+    *::--webkit-media-controls-play-button {
+      display: none!important;
+      -webkit-appearance: none;
+    }
+
+    /* New shadow dom for play button */
+
+    /* This one works */
+
+    *::-webkit-media-controls-start-playback-button {
+      display: none!important;
+      -webkit-appearance: none;
+    }
+
     @keyframes spinner {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }

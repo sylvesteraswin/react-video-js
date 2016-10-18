@@ -50,6 +50,8 @@ const NOOP = () => {};
 class ProductVideo extends Component {
     state = {
         showingHD: false,
+        events: {},
+        aspectRatio: (VJS_FRAMEWORK_DEFAULT.width)/(VJS_FRAMEWORK_DEFAULT.height),
     };
 
     static defaultProps = {
@@ -61,33 +63,61 @@ class ProductVideo extends Component {
         customSkinClass: '',
         loop: false,
         options: VJS_FRAMEWORK_DEFAULT,
-        onReady: NOOP,
-        resize: false,
-        dispose: false,
-        events: {},
+        resize: true,
+        dispose: true,
+        debounce: 300,
+        width: 0,
+        height: 0,
     };
 
     componentWillMount = () => {
+        const {
+            width,
+            height,
+        } = this.props;
+
         this.setState({
-            uid: this.getRandomID(),
+            uid: this._getRandomID(),
         });
     };
 
     componentDidMount = () => {
+        const {
+            resize,
+        } = this.props;
+
         this.setUpPlayer();
+
+        if (resize) {
+            this.setState({
+                events: {
+                    resize: addEvent(window, 'resize', this._handleResize, this),
+                },
+            });
+        }
     };
 
     componentWillReceiveProps = (nextProps) => {
         const {
             source: oldSource = '',
+            width: oldWidth,
+            height: oldHeight,
         } = this.props;
 
         const {
             source: newSource = '',
+            width: newWidth,
+            height: newHeight,
         } = nextProps;
 
         if ((newSource !== oldSource) && (newSource !== '')) {
             this._updatePlayerSrc(newSource);
+        }
+
+        if ((oldWidth !== newWidth) || (oldHeight !== newHeight)) {
+            this.setState({
+                aspectRatio: newWidth / newHeight,
+            });
         }
     };
 
@@ -96,8 +126,17 @@ class ProductVideo extends Component {
     };
 
     componentWillUnMount = () => {
+        const {
+            resize,
+        } = this.state.events;
+
         this.unloadPlayer();
+
+        removeEvent(resize);
+
     };
+
+    _getRandomID = () => Math.floor((Math.random() * 16749) + 1);
 
     _buildPlayerOptions = () => {
         const {
@@ -112,10 +151,16 @@ class ProductVideo extends Component {
             height: defaultHeight,
         } = VJS_FRAMEWORK_DEFAULT;
 
-        return Object.assign({}, VJS_FRAMEWORK_DEFAULT, options, {
-            height: resize ? 'auto' : (height || defaultHeight),
-            width: resize ? 'auto' : (width || defaultWidth),
+        const result = Object.assign({}, VJS_FRAMEWORK_DEFAULT, options, {
+            height: (height || defaultHeight),
+            width: (width || defaultWidth),
         });
+
+        this.setState({
+            aspectRatio: (result.width) / (result.height),
+        });
+
+        return result;
     };
 
     _updateToHD = () => {
@@ -142,11 +187,27 @@ class ProductVideo extends Component {
     };
 
     _updatePlayerSrc = (source) => {
-        const {
-            _player,
-        } = this;
+        const player = this._getProductPlayer();
+        player.src(source);
+    };
 
-        _player.src(source);
+    _handleResize = () => {
+        const {
+            debounce,
+        } = this.props;
+
+        const player = this._getProductPlayer();
+
+        clearTimeout(this.handleResizeTimer);
+        this.handleResizeTimer = setTimeout(() => {
+            const {
+                width,
+                height,
+            } = this._getPlayerDimensions();
+
+            player.dimensions(width, height);
+
+        }, debounce);
     };
 
     _playerReady = () => {
@@ -157,36 +218,75 @@ class ProductVideo extends Component {
             loop,
         } = this.props;
 
-        this._player.on('play', () => {
-            this._player.posterImage.hide();
-            this._player.controlBar.show();
+        const player = this._getProductPlayer();
+
+        this._handleResize();
+
+        player.on('play', () => {
+            player.posterImage.hide();
+            player.controlBar.show();
             this._elToggle('bigPlayButton', false);
             this._elToggle('_zvuiBigPauseButton', true);
 
             if (onPlay && typeof onPlay === 'function') {
-                onPlay.call(this, this._player);
+                onPlay.call(this, player);
             }
         });
 
-        this._player.on('pause', () => {
-            this._player.controlBar.hide();
+        player.on('pause', () => {
+            player.controlBar.hide();
             this._elToggle('bigPlayButton', true);
             this._elToggle('_zvuiBigPauseButton', false);
 
             if (onPause && typeof onPause === 'function') {
-                onPause.call(this, this._player);
+                onPause.call(this, player);
             }
         });
 
-        this._player.on('ended', () => {
-            this._player.posterImage.show();
-            this._player.controlBar.hide();
+        player.on('ended', () => {
+            player.posterImage.show();
+            player.controlBar.hide();
             this._elToggle('bigPlayButton', true);
 
             if (!loop && onEnded && typeof onEnded === 'function') {
-                onEnded.call(this, this._player);
+                onEnded.call(this, player);
             }
         });
+    };
+
+    _getResizeOption = () => {
+        const {
+            aspectRatio,
+        } = this.state;
+
+        return Object.assign({}, {
+            aspectRatio,
+        });
+    };
+
+    _getPlayerDimensions = () => {
+        const {
+            aspectRatio,
+        } = this._getResizeOption();
+
+        const player = this._getProductPlayer();
+
+        let {
+            width,
+            height,
+        } = this.props;
+
+        const containerWidth = player.el_.parentElement.offsetWidth;
+
+        if (containerWidth < width) {
+            width = containerWidth;
+            height = containerWidth / aspectRatio;
+        }
+
+        return {
+            width,
+            height,
+        };
     };
 
     _elToggle = (obj, flag) => {
@@ -212,7 +312,7 @@ class ProductVideo extends Component {
     };
 
     insertComponents = () => {
-        const player = this.getProductPlayer();
+        const player = this._getProductPlayer();
 
         const {
             sourceHD,
@@ -250,21 +350,27 @@ class ProductVideo extends Component {
     };
 
     unloadPlayer = () => {
-        this._player.dispose();
+        const player = this._getProductPlayer();
+
+        const {
+            dispose,
+        } = this.props;
+
+        if (dispose) {
+            player.dispose();
+        }
     };
 
-    getProductPlayer = () => {
+    _getProductPlayer = () => {
         return this._player;
     };
-
-    getRandomID = () => Math.floor((Math.random() * 16749) + 1);
 
     render = () => {
         const {
             skin,
             customSkinClass,
             bigPlayButton,
-            poster,
+            poster = null,
         } = this.props;
 
         const {
@@ -280,7 +386,8 @@ class ProductVideo extends Component {
                     [customSkinClass]: (skin !== 'default'),
                     [VJS_CENTER_PLAY_CLASS]: bigPlayButton,
                 })}
-                poster={poster || null}
+                poster={poster}
+                playsinline={true}
                 />
         );
     };
@@ -303,6 +410,7 @@ ProductVideo.propTypes = {
     onEnded: PropTypes.func,
     onPlay: PropTypes.func,
     onPause: PropTypes.func,
+    debounce: PropTypes.number,
 };
 
 export default ProductVideo;

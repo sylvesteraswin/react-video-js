@@ -20,16 +20,15 @@ class ZvuiHDButton extends Button {
     handleClick() {
         const container = this.player();
         const {
-            className
+            className,
         } = this.el_;
-        console.log(className);
+
         if (!className.includes('active')) {
             this.addClass('active');
         } else {
             this.removeClass('active');
         }
         container._updateToHD();
-
         container._player.play();
 
     }

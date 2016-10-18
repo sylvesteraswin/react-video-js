@@ -177,42 +177,81 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 
 	        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = ProductVideo.__proto__ || Object.getPrototypeOf(ProductVideo)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
-	            showingHD: false
+	            showingHD: false,
+	            events: {},
+	            aspectRatio: VJS_FRAMEWORK_DEFAULT.width / VJS_FRAMEWORK_DEFAULT.height
 	        }, _this.componentWillMount = function () {
+	            var _this$props = _this.props;
+	            var width = _this$props.width;
+	            var height = _this$props.height;
+
 	            _this.setState({
-	                uid: _this.getRandomID()
+	                uid: _this._getRandomID()
 	            });
 	        }, _this.componentDidMount = function () {
+	            var resize = _this.props.resize;
+
 	            _this.setUpPlayer();
+
+	            if (resize) {
+	                _this.setState({
+	                    events: {
+	                        resize: (0, _addEventListener2.default)(window, 'resize', _this._handleResize, _this)
+	                    }
+	                });
+	            }
 	        }, _this.componentWillReceiveProps = function (nextProps) {
-	            var _this$props$source = _this.props.source;
-	            var oldSource = _this$props$source === undefined ? '' : _this$props$source;
+	            var _this$props2 = _this.props;
+	            var _this$props2$source = _this$props2.source;
+	            var oldSource = _this$props2$source === undefined ? '' : _this$props2$source;
+	            var oldWidth = _this$props2.width;
+	            var oldHeight = _this$props2.height;
 	            var _nextProps$source = nextProps.source;
 	            var newSource = _nextProps$source === undefined ? '' : _nextProps$source;
+	            var newWidth = nextProps.width;
+	            var newHeight = nextProps.height;
 
 	            if (newSource !== oldSource && newSource !== '') {
 	                _this._updatePlayerSrc(newSource);
 	            }
+
+	            if (oldWidth !== newWidth || oldHeight !== newHeight) {
+	                _this.setState({
+	                    aspectRatio: newWidth / newHeight
+	                });
+	            }
 	        }, _this.shouldComponentUpdate = function () {}, _this.componentWillUnMount = function () {
+	            var resize = _this.state.events.resize;
+
 	            _this.unloadPlayer();
+
+	            (0, _removeEventListener2.default)(resize);
+	        }, _this._getRandomID = function () {
+	            return Math.floor(Math.random() * 16749 + 1);
 	        }, _this._buildPlayerOptions = function () {
-	            var _this$props = _this.props;
-	            var options = _this$props.options;
-	            var resize = _this$props.resize;
-	            var height = _this$props.height;
-	            var width = _this$props.width;
+	            var _this$props3 = _this.props;
+	            var options = _this$props3.options;
+	            var resize = _this$props3.resize;
+	            var height = _this$props3.height;
+	            var width = _this$props3.width;
 	            var defaultWidth = VJS_FRAMEWORK_DEFAULT.width;
 	            var defaultHeight = VJS_FRAMEWORK_DEFAULT.height;
 
-	            return Object.assign({}, VJS_FRAMEWORK_DEFAULT, options, {
-	                height: resize ? 'auto' : height || defaultHeight,
-	                width: resize ? 'auto' : width || defaultWidth
+	            var result = Object.assign({}, VJS_FRAMEWORK_DEFAULT, options, {
+	                height: height || defaultHeight,
+	                width: width || defaultWidth
 	            });
+
+	            _this.setState({
+	                aspectRatio: result.width / result.height
+	            });
+
+	            return result;
 	        }, _this._updateToHD = function () {
 	            var showingHD = _this.state.showingHD;
-	            var _this$props2 = _this.props;
-	            var source = _this$props2.source;
-	            var sourceHD = _this$props2.sourceHD;
+	            var _this$props4 = _this.props;
+	            var source = _this$props4.source;
+	            var sourceHD = _this$props4.sourceHD;
 
 	            if (sourceHD && !showingHD) {
 	                _this._updatePlayerSrc(sourceHD);
@@ -226,57 +265,101 @@ return /******/ (function(modules) { // webpackBootstrap
 	                });
 	            }
 	        }, _this._updatePlayerSrc = function (source) {
-	            var _this2 = _this;
-	            var _player = _this2._player;
+	            var player = _this._getProductPlayer();
+	            player.src(source);
+	        }, _this._handleResize = function () {
+	            var debounce = _this.props.debounce;
 
-	            _player.src(source);
+	            var player = _this._getProductPlayer();
+
+	            clearTimeout(_this.handleResizeTimer);
+	            _this.handleResizeTimer = setTimeout(function () {
+	                var _this$_getPlayerDimen = _this._getPlayerDimensions();
+
+	                var width = _this$_getPlayerDimen.width;
+	                var height = _this$_getPlayerDimen.height;
+
+	                player.dimensions(width, height);
+	            }, debounce);
 	        }, _this._playerReady = function () {
-	            var _this$props3 = _this.props;
-	            var onEnded = _this$props3.onEnded;
-	            var onPlay = _this$props3.onPlay;
-	            var onPause = _this$props3.onPause;
-	            var loop = _this$props3.loop;
+	            var _this$props5 = _this.props;
+	            var onEnded = _this$props5.onEnded;
+	            var onPlay = _this$props5.onPlay;
+	            var onPause = _this$props5.onPause;
+	            var loop = _this$props5.loop;
 
-	            _this._player.on('play', function () {
-	                _this._player.posterImage.hide();
-	                _this._player.controlBar.show();
+	            var player = _this._getProductPlayer();
+
+	            _this._handleResize();
+
+	            player.on('play', function () {
+	                player.posterImage.hide();
+	                player.controlBar.show();
 	                _this._elToggle('bigPlayButton', false);
 	                _this._elToggle('_zvuiBigPauseButton', true);
 
 	                if (onPlay && typeof onPlay === 'function') {
-	                    onPlay.call(_this, _this._player);
+	                    onPlay.call(_this, player);
 	                }
 	            });
 
-	            _this._player.on('pause', function () {
-	                _this._player.controlBar.hide();
+	            player.on('pause', function () {
+	                player.controlBar.hide();
 	                _this._elToggle('bigPlayButton', true);
 	                _this._elToggle('_zvuiBigPauseButton', false);
 
 	                if (onPause && typeof onPause === 'function') {
-	                    onPause.call(_this, _this._player);
+	                    onPause.call(_this, player);
 	                }
 	            });
 
-	            _this._player.on('ended', function () {
-	                _this._player.posterImage.show();
-	                _this._player.controlBar.hide();
+	            player.on('ended', function () {
+	                player.posterImage.show();
+	                player.controlBar.hide();
 	                _this._elToggle('bigPlayButton', true);
 
 	                if (!loop && onEnded && typeof onEnded === 'function') {
-	                    onEnded.call(_this, _this._player);
+	                    onEnded.call(_this, player);
 	                }
 	            });
+	        }, _this._getResizeOption = function () {
+	            var aspectRatio = _this.state.aspectRatio;
+
+	            return Object.assign({}, {
+	                aspectRatio: aspectRatio
+	            });
+	        }, _this._getPlayerDimensions = function () {
+	            var _this$_getResizeOptio = _this._getResizeOption();
+
+	            var aspectRatio = _this$_getResizeOptio.aspectRatio;
+
+	            var player = _this._getProductPlayer();
+
+	            var _this$props6 = _this.props;
+	            var width = _this$props6.width;
+	            var height = _this$props6.height;
+
+	            var containerWidth = player.el_.parentElement.offsetWidth;
+
+	            if (containerWidth < width) {
+	                width = containerWidth;
+	                height = containerWidth / aspectRatio;
+	            }
+
+	            return {
+	                width: width,
+	                height: height
+	            };
 	        }, _this._elToggle = function (obj, flag) {
 	            var _this$_player$obj = _this._player[obj];
 	            _this$_player$obj = _this$_player$obj === undefined ? {} : _this$_player$obj;
 	            var _this$_player$obj$el_ = _this$_player$obj.el_;
 	            var targetEl = _this$_player$obj$el_ === undefined ? null : _this$_player$obj$el_;
-	            var _this3 = _this;
-	            var _this3$obj = _this3[obj];
-	            _this3$obj = _this3$obj === undefined ? {} : _this3$obj;
-	            var _this3$obj$el_ = _this3$obj.el_;
-	            var targetParentEl = _this3$obj$el_ === undefined ? null : _this3$obj$el_;
+	            var _this2 = _this;
+	            var _this2$obj = _this2[obj];
+	            _this2$obj = _this2$obj === undefined ? {} : _this2$obj;
+	            var _this2$obj$el_ = _this2$obj.el_;
+	            var targetParentEl = _this2$obj$el_ === undefined ? null : _this2$obj$el_;
 
 	            if (targetEl) {
 	                targetEl.style.display = flag ? 'block' : 'none';
@@ -286,7 +369,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                targetParentEl.style.display = flag ? 'block' : 'none';
 	            }
 	        }, _this.insertComponents = function () {
-	            var player = _this.getProductPlayer();
+	            var player = _this._getProductPlayer();
 
 	            var sourceHD = _this.props.sourceHD;
 
@@ -298,12 +381,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                player.addChild(_this._zvuiHDButton);
 	            }
 	        }, _this.setUpPlayer = function () {
-	            var _this$props4 = _this.props;
-	            var source = _this$props4.source;
-	            var onEnded = _this$props4.onEnded;
-	            var onPlay = _this$props4.onPlay;
-	            var onPause = _this$props4.onPause;
-	            var loop = _this$props4.loop;
+	            var _this$props7 = _this.props;
+	            var source = _this$props7.source;
+	            var onEnded = _this$props7.onEnded;
+	            var onPlay = _this$props7.onPlay;
+	            var onPause = _this$props7.onPause;
+	            var loop = _this$props7.loop;
 
 	            var options = _this._buildPlayerOptions();
 
@@ -317,26 +400,32 @@ return /******/ (function(modules) { // webpackBootstrap
 	                _this._updatePlayerSrc(source);
 	            }, 50);
 	        }, _this.unloadPlayer = function () {
-	            _this._player.dispose();
-	        }, _this.getProductPlayer = function () {
+	            var player = _this._getProductPlayer();
+
+	            var dispose = _this.props.dispose;
+
+	            if (dispose) {
+	                player.dispose();
+	            }
+	        }, _this._getProductPlayer = function () {
 	            return _this._player;
-	        }, _this.getRandomID = function () {
-	            return Math.floor(Math.random() * 16749 + 1);
 	        }, _this.render = function () {
 	            var _classnames;
 
-	            var _this$props5 = _this.props;
-	            var skin = _this$props5.skin;
-	            var customSkinClass = _this$props5.customSkinClass;
-	            var bigPlayButton = _this$props5.bigPlayButton;
-	            var poster = _this$props5.poster;
+	            var _this$props8 = _this.props;
+	            var skin = _this$props8.skin;
+	            var customSkinClass = _this$props8.customSkinClass;
+	            var bigPlayButton = _this$props8.bigPlayButton;
+	            var _this$props8$poster = _this$props8.poster;
+	            var poster = _this$props8$poster === undefined ? null : _this$props8$poster;
 	            var uid = _this.state.uid;
 
 	            return _react2.default.createElement('video', {
 	                ref: BASE_CLASS,
 	                id: BASE_CLASS + '-' + uid,
 	                className: (0, _classnames3.default)(BASE_CLASS, VJS_BASE_CLASS, (_classnames = {}, _defineProperty(_classnames, VJS_DEFAULT_SKIN_CLASS, skin === 'default'), _defineProperty(_classnames, customSkinClass, skin !== 'default'), _defineProperty(_classnames, VJS_CENTER_PLAY_CLASS, bigPlayButton), _classnames)),
-	                poster: poster || null
+	                poster: poster,
+	                playsinline: true
 	            });
 	        }, _temp), _possibleConstructorReturn(_this, _ret);
 	    }
@@ -353,10 +442,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    customSkinClass: '',
 	    loop: false,
 	    options: VJS_FRAMEWORK_DEFAULT,
-	    onReady: NOOP,
-	    resize: false,
-	    dispose: false,
-	    events: {}
+	    resize: true,
+	    dispose: true,
+	    debounce: 300,
+	    width: 0,
+	    height: 0
 	};
 
 	ProductVideo.propTypes = {
@@ -375,7 +465,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    options: _react.PropTypes.object,
 	    onEnded: _react.PropTypes.func,
 	    onPlay: _react.PropTypes.func,
-	    onPause: _react.PropTypes.func
+	    onPause: _react.PropTypes.func,
+	    debounce: _react.PropTypes.number
 	};
 
 	exports.default = ProductVideo;
@@ -25173,14 +25264,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var container = this.player();
 	            var className = this.el_.className;
 
-	            console.log(className);
 	            if (!className.includes('active')) {
 	                this.addClass('active');
 	            } else {
 	                this.removeClass('active');
 	            }
 	            container._updateToHD();
-
 	            container._player.play();
 	        }
 	    }]);
