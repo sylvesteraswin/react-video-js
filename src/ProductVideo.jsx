@@ -7,6 +7,8 @@ import classnames from 'classnames';
 import addEvent from './utils/add-event-listener';
 import removeEvent from './utils/remove-event-listener';
 
+import ZvUiBigPlayButton from './components/zvuiBigPlayButton';
+
 const BASE_CLASS = 'zvui-product-video';
 const VJS_BASE_CLASS= 'video-js';
 const VJS_DEFAULT_SKIN_CLASS = 'vjs-default-skin';
@@ -18,6 +20,27 @@ const VJS_FRAMEWORK_DEFAULT = {
     preload: 'auto',
     autoplay: false,
     controls: true,
+    muted: true,
+    controlBar: {
+        playToggle: false,
+        fullscreenToggle: false,
+        currentTimeDisplay: false,
+        timeDivider: false,
+        durationDisplay: false,
+        remainingTimeDisplay: false,
+        progressControl: {
+            seekBar: {
+                seekHandle: false,
+            },
+        },
+        volumeMenuButton: false,
+        playbackRateMenuButton: false,
+        audioTrackButton: false,
+        captionsButton: false,
+        chaptersButton: false,
+        descriptionsButton: false,
+        subtitlesButton: false,
+    }
 };
 
 const NOOP = () => {};
@@ -89,27 +112,6 @@ class ProductVideo extends Component {
         return Object.assign({}, VJS_FRAMEWORK_DEFAULT, options, {
             height: resize ? 'auto' : (height || defaultHeight),
             width: resize ? 'auto' : (width || defaultWidth),
-        }, {
-            controlBar: {
-                playToggle: false,
-                fullscreenToggle: false,
-                currentTimeDisplay: false,
-                timeDivider: false,
-                durationDisplay: false,
-                remainingTimeDisplay: false,
-                progressControl: {
-                    seekBar: {
-                        seekHandle: false,
-                    },
-                },
-                volumeMenuButton: false,
-                playbackRateMenuButton: false,
-                audioTrackButton: false,
-                captionsButton: false,
-                chaptersButton: false,
-                descriptionsButton: false,
-                subtitlesButton: false,
-            }
         });
     };
 
@@ -134,6 +136,8 @@ class ProductVideo extends Component {
 
             this._elToggle('posterImage', false);
 
+            this._elToggle('_zvuiButton', true);
+
             if (onPlay && typeof onPlay === 'function') {
                 onPlay.call(this, this._player);
             }
@@ -141,6 +145,7 @@ class ProductVideo extends Component {
 
         this._player.on('pause', () => {
             this._elToggle('bigPlayButton', true);
+            this._elToggle('_zvuiButton', false);
 
             if (onPause && typeof onPause === 'function') {
                 onPause.call(this, this._player);
@@ -151,7 +156,6 @@ class ProductVideo extends Component {
             this._elToggle('bigPlayButton', true);
 
             this._elToggle('posterImage', true);
-            this._player.posterImage.el_.style.display = 'block';
 
             if (!loop && onEnded && typeof onEnded === 'function') {
                 onEnded.call(this, this._player);
@@ -166,9 +170,26 @@ class ProductVideo extends Component {
             } = {},
         } = this._player;
 
+        const {
+            [obj]: {
+                el_: targetParentEl = null
+            } = {}
+        } = this;
+
         if (targetEl) {
             targetEl.style.display = (flag ? 'block' : 'none');
         }
+
+        if (targetParentEl) {
+            targetParentEl.style.display = (flag ? 'block' : 'none');
+        }
+    };
+
+    insertComponents = () => {
+        const player = this.getProductPlayer();
+
+        this._zvuiButton = new ZvUiBigPlayButton(this._player);
+        this._player.addChild(this._zvuiButton);
     };
 
     setUpPlayer = () => {
@@ -184,6 +205,8 @@ class ProductVideo extends Component {
 
         this._player = vjs(this.refs[BASE_CLASS], options);
 
+        this.insertComponents();
+
         this._player.ready(this._playerReady);
 
         setTimeout(() => {
@@ -193,6 +216,10 @@ class ProductVideo extends Component {
 
     unloadPlayer = () => {
         this._player.dispose();
+    };
+
+    getProductPlayer = () => {
+        return this._player;
     };
 
     getRandomID = () => Math.floor((Math.random() * 16749) + 1);

@@ -86,6 +86,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _removeEventListener2 = _interopRequireDefault(_removeEventListener);
 
+	var _zvuiBigPlayButton = __webpack_require__(7);
+
+	var _zvuiBigPlayButton2 = _interopRequireDefault(_zvuiBigPlayButton);
+
 	function _interopRequireDefault(obj) {
 	    return obj && obj.__esModule ? obj : { default: obj };
 	}
@@ -128,7 +132,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	    height: 693,
 	    preload: 'auto',
 	    autoplay: false,
-	    controls: true
+	    controls: true,
+	    muted: true,
+	    controlBar: {
+	        playToggle: false,
+	        fullscreenToggle: false,
+	        currentTimeDisplay: false,
+	        timeDivider: false,
+	        durationDisplay: false,
+	        remainingTimeDisplay: false,
+	        progressControl: {
+	            seekBar: {
+	                seekHandle: false
+	            }
+	        },
+	        volumeMenuButton: false,
+	        playbackRateMenuButton: false,
+	        audioTrackButton: false,
+	        captionsButton: false,
+	        chaptersButton: false,
+	        descriptionsButton: false,
+	        subtitlesButton: false
+	    }
 	};
 
 	var NOOP = function NOOP() {};
@@ -174,27 +199,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return Object.assign({}, VJS_FRAMEWORK_DEFAULT, options, {
 	                height: resize ? 'auto' : height || defaultHeight,
 	                width: resize ? 'auto' : width || defaultWidth
-	            }, {
-	                controlBar: {
-	                    playToggle: false,
-	                    fullscreenToggle: false,
-	                    currentTimeDisplay: false,
-	                    timeDivider: false,
-	                    durationDisplay: false,
-	                    remainingTimeDisplay: false,
-	                    progressControl: {
-	                        seekBar: {
-	                            seekHandle: false
-	                        }
-	                    },
-	                    volumeMenuButton: false,
-	                    playbackRateMenuButton: false,
-	                    audioTrackButton: false,
-	                    captionsButton: false,
-	                    chaptersButton: false,
-	                    descriptionsButton: false,
-	                    subtitlesButton: false
-	                }
 	            });
 	        }, _this._updatePlayerSrc = function (source) {
 	            var _this2 = _this;
@@ -213,6 +217,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                _this._elToggle('posterImage', false);
 
+	                _this._elToggle('_zvuiButton', true);
+
 	                if (onPlay && typeof onPlay === 'function') {
 	                    onPlay.call(_this, _this._player);
 	                }
@@ -220,6 +226,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            _this._player.on('pause', function () {
 	                _this._elToggle('bigPlayButton', true);
+	                _this._elToggle('_zvuiButton', false);
 
 	                if (onPause && typeof onPause === 'function') {
 	                    onPause.call(_this, _this._player);
@@ -230,7 +237,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                _this._elToggle('bigPlayButton', true);
 
 	                _this._elToggle('posterImage', true);
-	                _this._player.posterImage.el_.style.display = 'block';
 
 	                if (!loop && onEnded && typeof onEnded === 'function') {
 	                    onEnded.call(_this, _this._player);
@@ -241,10 +247,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	            _this$_player$obj = _this$_player$obj === undefined ? {} : _this$_player$obj;
 	            var _this$_player$obj$el_ = _this$_player$obj.el_;
 	            var targetEl = _this$_player$obj$el_ === undefined ? null : _this$_player$obj$el_;
+	            var _this3 = _this;
+	            var _this3$obj = _this3[obj];
+	            _this3$obj = _this3$obj === undefined ? {} : _this3$obj;
+	            var _this3$obj$el_ = _this3$obj.el_;
+	            var targetParentEl = _this3$obj$el_ === undefined ? null : _this3$obj$el_;
 
 	            if (targetEl) {
 	                targetEl.style.display = flag ? 'block' : 'none';
 	            }
+
+	            if (targetParentEl) {
+	                targetParentEl.style.display = flag ? 'block' : 'none';
+	            }
+	        }, _this.insertComponents = function () {
+	            var player = _this.getProductPlayer();
+
+	            _this._zvuiButton = new _zvuiBigPlayButton2.default(_this._player);
+	            _this._player.addChild(_this._zvuiButton);
 	        }, _this.setUpPlayer = function () {
 	            var _this$props3 = _this.props;
 	            var source = _this$props3.source;
@@ -257,6 +277,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            _this._player = (0, _video2.default)(_this.refs[BASE_CLASS], options);
 
+	            _this.insertComponents();
+
 	            _this._player.ready(_this._playerReady);
 
 	            setTimeout(function () {
@@ -264,6 +286,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }, 50);
 	        }, _this.unloadPlayer = function () {
 	            _this._player.dispose();
+	        }, _this.getProductPlayer = function () {
+	            return _this._player;
 	        }, _this.getRandomID = function () {
 	            return Math.floor(Math.random() * 16749 + 1);
 	        }, _this.render = function () {
@@ -24925,6 +24949,108 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	exports.default = removeEvent;
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () {
+	    function defineProperties(target, props) {
+	        for (var i = 0; i < props.length; i++) {
+	            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+	        }
+	    }return function (Constructor, protoProps, staticProps) {
+	        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+	    };
+	}();
+
+	var _get = function get(object, property, receiver) {
+	    if (object === null) object = Function.prototype;var desc = Object.getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+	        var parent = Object.getPrototypeOf(object);if (parent === null) {
+	            return undefined;
+	        } else {
+	            return get(parent, property, receiver);
+	        }
+	    } else if ("value" in desc) {
+	        return desc.value;
+	    } else {
+	        var getter = desc.get;if (getter === undefined) {
+	            return undefined;
+	        }return getter.call(receiver);
+	    }
+	};
+
+	var _video = __webpack_require__(3);
+
+	var _video2 = _interopRequireDefault(_video);
+
+	function _interopRequireDefault(obj) {
+	    return obj && obj.__esModule ? obj : { default: obj };
+	}
+
+	function _classCallCheck(instance, Constructor) {
+	    if (!(instance instanceof Constructor)) {
+	        throw new TypeError("Cannot call a class as a function");
+	    }
+	}
+
+	function _possibleConstructorReturn(self, call) {
+	    if (!self) {
+	        throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+	    }return call && ((typeof call === "undefined" ? "undefined" : _typeof(call)) === "object" || typeof call === "function") ? call : self;
+	}
+
+	function _inherits(subClass, superClass) {
+	    if (typeof superClass !== "function" && superClass !== null) {
+	        throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : _typeof(superClass)));
+	    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+	}
+
+	var Button = _video2.default.getComponent('Button');
+
+	var ZvUiBigPlayButton = function (_Button) {
+	    _inherits(ZvUiBigPlayButton, _Button);
+
+	    function ZvUiBigPlayButton(player, options) {
+	        _classCallCheck(this, ZvUiBigPlayButton);
+
+	        return _possibleConstructorReturn(this, (ZvUiBigPlayButton.__proto__ || Object.getPrototypeOf(ZvUiBigPlayButton)).call(this, player, options));
+	    }
+
+	    _createClass(ZvUiBigPlayButton, [{
+	        key: 'createEl',
+	        value: function createEl() {
+
+	            return _get(ZvUiBigPlayButton.prototype.__proto__ || Object.getPrototypeOf(ZvUiBigPlayButton.prototype), 'createEl', this).call(this, 'button', {
+	                name: 'ZvUiBigPlayButton',
+	                id: 'zvui-video-button',
+	                className: 'zvui-video-button',
+	                title: 'Play Toggle',
+	                role: 'button',
+	                controlText_: 'Hello'
+	            });
+	        }
+	    }, {
+	        key: 'handleClick',
+	        value: function handleClick() {
+	            var player = this.player();
+	            player.pause();
+	        }
+	    }]);
+
+	    return ZvUiBigPlayButton;
+	}(Button);
+
+	// ZvUiBigPlayButton.prototype.controlText_ = 'Play Toggle';
+
+	_video2.default.registerComponent('ZvUiBigPlayButton', ZvUiBigPlayButton);
+	exports.default = ZvUiBigPlayButton;
 
 /***/ }
 /******/ ])

@@ -1,0 +1,20 @@
+$min_S: 320px;
+$min_M: 600px;
+$min_ML: 740px;
+$min_L: 960px;
+$min_XL: 1200px;
+
+$max_S: ($min_M - 1);
+$max_M: ($min_ML - 1);
+$max_ML: ($min_L - 1);
+$max_L: ($min_XL - 1);
+
+$phone: "only screen and (min-width: #{$min_S})";
+$phone-strict: "only screen and (min-width: #{$min_S}) and (max-width: #{$max_S})";
+$phablet: "only screen and (min-width: #{$min_M})";
+$phablet-strict: "only screen and (min-width: #{$min_M}) and (max-width: #{$max_M})";
+$tablet: "only screen and (min-width: #{$min_ML})";
+$tablet-strict: "only screen and (min-width: #{$min_ML}) and (max-width: #{$max_ML})";
+$desktop: "only screen and (min-width: #{$min_L})";
+$desktop-strict: "only screen and (min-width: #{$min_L}) and (max-width: #{$max_L})";
+$large: "only screen and (min-width: #{$min_XL})";
