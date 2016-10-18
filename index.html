@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>React-video-js by sylvesteraswin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">React-video-js</h1>
+      <h2 class="project-tagline">React video container with videojs libaray.</h2>
+      <a href="https://github.com/sylvesteraswin/react-video-js" class="btn">View on GitHub</a>
+      <a href="https://github.com/sylvesteraswin/react-video-js/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/sylvesteraswin/react-video-js/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="react-video-js" class="anchor" href="#react-video-js" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>React Video JS</h1>
+
+<p>Simple react video container with videojs libaray for displaying apparel videos.</p>
+
+<p>Features</p>
+
+<ul>
+<li>Mobile friendly</li>
+<li>Native video</li>
+<li>HD switch support</li>
+</ul>
+
+<h2>
+<a id="getting-started" class="anchor" href="#getting-started" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Getting started</h2>
+
+<pre><code>npm install react-video-js
+</code></pre>
+
+<h3>
+<a id="example" class="anchor" href="#example" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example</h3>
+
+<p><a href="https://github.com/sylvesteraswin/react-video-js/tree/master/example/src"><code>example/src/app.jsx</code></a></p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">import</span> <span class="pl-smi">ProductVideo</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>react-video-js<span class="pl-pds">'</span></span>;
+
+<span class="pl-k">class</span> <span class="pl-en">App</span> <span class="pl-k">extends</span> <span class="pl-e">React</span>.<span class="pl-smi">Component</span> {
+    <span class="pl-en">render</span> <span class="pl-k">=</span> () <span class="pl-k">=&gt;</span> {
+        <span class="pl-k">&lt;</span>ProductVideo
+            ref<span class="pl-k">=</span>{<span class="pl-smi">i</span> <span class="pl-k">=&gt;</span> <span class="pl-v">this</span>.<span class="pl-smi">pv</span> <span class="pl-k">=</span> i}
+            source<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>https://dl.dropboxusercontent.com/u/8725581/99B170E9-5D1C-49C5-A87F-1123679F3618.MOV<span class="pl-pds">"</span></span>
+            <span class="pl-k">/</span><span class="pl-k">&gt;</span>
+    }
+}</pre></div>
+
+<h1>
+<a id="props" class="anchor" href="#props" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Props</h1>
+
+<ul>
+<li>
+<code>source</code>: (required) String.</li>
+<li>
+<code>sourceHD</code>: String, default <code>''</code>.</li>
+<li>
+<code>poster</code>: String, default <code>null</code>.</li>
+<li>
+<code>skin</code>: String, default <code>default</code>.</li>
+<li>
+<code>bigPlayButton</code>: Boolean, default <code>true</code>.</li>
+<li>
+<code>customSkinClass</code>: String, default <code>''</code>.</li>
+<li>
+<code>height</code>: Number, default <code>null</code>.</li>
+<li>
+<code>width</code>: Number, default <code>null</code>.</li>
+<li>
+<code>loop</code>: Boolean, default <code>false</code>.</li>
+<li>
+<code>onReady</code>: Functon, <code>callback(videoJsPlayer)</code>.</li>
+<li>
+<code>resize</code>: Boolean, default <code>true</code>.</li>
+<li>
+<code>options</code>: Boolean, default</li>
+<li>
+<code>onEnded</code>: Function, <code>callback(videoJsPlayer)</code>.</li>
+<li>
+<code>onPlay</code>: Function, <code>callback(videoJsPlayer)</code>.</li>
+<li>
+<code>onPause</code>: Function, <code>callback(videoJsPlayer)</code>.</li>
+<li>
+<code>debounce</code>: Number, default <code>300</code>.</li>
+</ul>
+
+<h1>
+<a id="build-the-example-locally" class="anchor" href="#build-the-example-locally" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Build the example locally</h1>
+
+<pre><code>git clone https://github.com/sylvesteraswin/react-video-js
+npm install
+npm start
+</code></pre>
+
+<h1>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h1>
+
+<p>MIT</p>
+
+<h1>
+<a id="collaboration" class="anchor" href="#collaboration" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Collaboration</h1>
+
+<p>Feel free to contribute and or provide feedback.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/sylvesteraswin/react-video-js">React-video-js</a> is maintained by <a href="https://github.com/sylvesteraswin">sylvesteraswin</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
