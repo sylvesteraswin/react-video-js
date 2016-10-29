@@ -287,6 +287,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var onPlay = _this$props5.onPlay;
 	            var onPause = _this$props5.onPause;
 	            var loop = _this$props5.loop;
+	            var onReady = _this$props5.onReady;
 
 	            var player = _this._getProductPlayer();
 
@@ -322,6 +323,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    onEnded.call(_this, player);
 	                }
 	            });
+
+	            if (onReady && typeof onReady === 'function') {
+	                onReady.call(_this, player);
+	            }
 	        }, _this._getResizeOption = function () {
 	            var aspectRatio = _this.state.aspectRatio;
 

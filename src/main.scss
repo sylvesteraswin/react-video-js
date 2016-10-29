@@ -6,6 +6,9 @@ $vjs-base-class: vjs;
 
 .#{$base-class} {
     margin: 0 auto;
+    > video {
+        width: 100%;
+    }
 
     /* This used to work for parent element of button divs */
 
