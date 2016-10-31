@@ -6,5 +6,5 @@ import path from 'path';
 taskDir(gulp, path.join(__dirname, 'source'));
 
 module.exports = (callback) => {
-    runSequence('build:source:clean', 'build:source:style', 'build:source:lint', 'build:source:babel', 'build:source:umd', callback);
+    runSequence('build:source:clean', 'build:source:style', 'build:source:lint', 'build:source:babel', 'build:source:umd', 'build:source:fontcopy', callback);
 };
