@@ -26,6 +26,12 @@ const webpackConfig = {
       commonjs: 'react-dom',
       commonjs2: 'react-dom',
       amd: 'react-dom'
+  },
+    'video.js': {
+        root: 'vjs',
+        commonjs: 'video.js',
+        commonjs2: 'video.js',
+        amd: 'video.js'
     }
   },
   module: {
