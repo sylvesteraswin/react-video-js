@@ -46,6 +46,7 @@ $vjs-base-class: vjs;
 
 .#{$base-class} {
     margin: 0 auto;
+    background-color: #fff !important;
     > video {
         width: 100%;
     }
@@ -115,7 +116,7 @@ $vjs-base-class: vjs;
             opacity: 1;
             border-radius: .3em;
             transition: opacity .4s;
-            opacity: .2;
+            opacity: 0;
             margin-top: -.75em;
             margin-left: -1.5em;
             font-family: 'VideoJS';
@@ -140,12 +141,13 @@ $vjs-base-class: vjs;
             width: 1em;
             opacity: .4;
             display: none;
-            right: 10px;
-            top: 10px;
+            right: 1em;
+            bottom: 1em;
             margin: 0;
             color: #000;
             &.active {
                 opacity: 1;
+                display: block;
             }
             &:before {
                 content: "\f114"

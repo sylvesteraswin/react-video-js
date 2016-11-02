@@ -66,8 +66,6 @@ class ProductVideo extends Component {
         resize: true,
         dispose: true,
         debounce: 300,
-        width: 0,
-        height: 0,
     };
 
     componentWillMount = () => {
@@ -85,6 +83,8 @@ class ProductVideo extends Component {
         const {
             resize,
         } = this.props;
+
+
 
         this.setUpPlayer();
 
@@ -119,10 +119,6 @@ class ProductVideo extends Component {
                 aspectRatio: newWidth / newHeight,
             });
         }
-    };
-
-    shouldComponentUpdate = () => {
-
     };
 
     componentWillUnMount = () => {
@@ -392,14 +388,13 @@ class ProductVideo extends Component {
                     [VJS_CENTER_PLAY_CLASS]: bigPlayButton,
                 })}
                 poster={poster}
-                playsinline={true}
                 />
         );
     };
 }
 
 ProductVideo.propTypes = {
-    source: PropTypes.string.string,
+    source: PropTypes.string.isRequired,
     sourceHD: PropTypes.string,
     poster: PropTypes.string,
     skin: PropTypes.string,

@@ -220,7 +220,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    aspectRatio: newWidth / newHeight
 	                });
 	            }
-	        }, _this.shouldComponentUpdate = function () {}, _this.componentWillUnMount = function () {
+	        }, _this.componentWillUnMount = function () {
 	            var resize = _this.state.events.resize;
 
 	            _this.unloadPlayer();
@@ -429,8 +429,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                ref: BASE_CLASS,
 	                id: BASE_CLASS + '-' + uid,
 	                className: (0, _classnames3.default)(BASE_CLASS, VJS_BASE_CLASS, (_classnames = {}, _defineProperty(_classnames, VJS_DEFAULT_SKIN_CLASS, skin === 'default'), _defineProperty(_classnames, customSkinClass, skin !== 'default'), _defineProperty(_classnames, VJS_CENTER_PLAY_CLASS, bigPlayButton), _classnames)),
-	                poster: poster,
-	                playsinline: true
+	                poster: poster
 	            });
 	        }, _temp), _possibleConstructorReturn(_this, _ret);
 	    }
@@ -449,13 +448,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    options: VJS_FRAMEWORK_DEFAULT,
 	    resize: true,
 	    dispose: true,
-	    debounce: 300,
-	    width: 0,
-	    height: 0
+	    debounce: 300
 	};
 
 	ProductVideo.propTypes = {
-	    source: _react.PropTypes.string.string,
+	    source: _react.PropTypes.string.isRequired,
 	    sourceHD: _react.PropTypes.string,
 	    poster: _react.PropTypes.string,
 	    skin: _react.PropTypes.string,

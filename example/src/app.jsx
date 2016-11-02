@@ -16,6 +16,7 @@ class App extends Component {
                 <ProductVideo
                     ref={i => this.pv = i}
                     source="https://dl.dropboxusercontent.com/u/8725581/99B170E9-5D1C-49C5-A87F-1123679F3618.MOV"
+                    sourceHD="https://dl.dropboxusercontent.com/u/8725581/99B170E9-5D1C-49C5-A87F-1123679F3618.MOV"
                     width={640}
                     height={360}
                     onEnded={this._handleOnEnded}
