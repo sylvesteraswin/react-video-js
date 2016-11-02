@@ -448,7 +448,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    options: VJS_FRAMEWORK_DEFAULT,
 	    resize: true,
 	    dispose: true,
-	    debounce: 300
+	    debounce: 300,
+	    height: VJS_FRAMEWORK_DEFAULT.height,
+	    width: VJS_FRAMEWORK_DEFAULT.width
 	};
 
 	ProductVideo.propTypes = {

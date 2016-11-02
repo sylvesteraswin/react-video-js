@@ -66,6 +66,8 @@ class ProductVideo extends Component {
         resize: true,
         dispose: true,
         debounce: 300,
+        height: VJS_FRAMEWORK_DEFAULT.height,
+        width: VJS_FRAMEWORK_DEFAULT.width,
     };
 
     componentWillMount = () => {
