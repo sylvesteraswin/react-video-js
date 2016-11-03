@@ -155,6 +155,14 @@ $vjs-base-class: vjs;
         }
     }
 
+    &.#{$vjs-base-class} {
+        &-ended {
+            .#{$vjs-base-class}-poster {
+                display: block;
+            }
+        }
+    }
+
     .#{$vjs-base-class} {
         &-loading-spinner {
             border-color: rgba(230, 96, 0, 0.25);
