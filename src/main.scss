@@ -91,6 +91,12 @@ $vjs-base-class: vjs;
         }
     }
 
+    .#{$vjs-base-class} {
+        &-control-bar {
+            overflow: hidden;
+        }
+    }
+
     &.#{$vjs-base-class}-playing {
         &:hover {
             .zvui-video {
@@ -98,7 +104,8 @@ $vjs-base-class: vjs;
                     display: block !important;
                     opacity: .3;
                 }
-                &-hd-button {
+                &-hd-button,
+                &-zoom-button {
                     display: block;
                 }
 
@@ -108,7 +115,8 @@ $vjs-base-class: vjs;
 
     .zvui-video {
         &-pause-button,
-        &-hd-button {
+        &-hd-button,
+        &-zoom-button {
             display: none;
             position: absolute;
             padding: 0;
@@ -134,7 +142,8 @@ $vjs-base-class: vjs;
             }
         }
 
-        &-hd-button {
+        &-hd-button,
+        &-zoom-button {
             font-size: 3em;
             line-height: 1em;
             height: 1em;
@@ -144,13 +153,20 @@ $vjs-base-class: vjs;
             right: 1em;
             bottom: 1em;
             margin: 0;
-            color: #000;
+            color: #fff;
             &.active {
                 opacity: 1;
                 display: block;
             }
             &:before {
                 content: "\f114"
+            }
+        }
+
+        &-zoom-button {
+            opacity: 1;
+            &:before {
+                content: "\f108";
             }
         }
     }

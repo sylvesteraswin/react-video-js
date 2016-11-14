@@ -9,6 +9,7 @@ import removeEvent from './utils/remove-event-listener';
 
 import ZvuiBigPlayButton from './components/zvuiBigPlayButton';
 import ZvuiHDButton from './components/zvuiHDButton';
+import ZvuiZoomButton from './components/zvuiZoomButton';
 
 const BASE_CLASS = 'zvui-product-video';
 const VJS_BASE_CLASS= 'video-js';
@@ -319,6 +320,7 @@ class ProductVideo extends Component {
 
         const {
             sourceHD,
+            zoomIn,
         } = this.props;
 
         this._zvuiBigPauseButton = new ZvuiBigPlayButton(player);
@@ -327,6 +329,11 @@ class ProductVideo extends Component {
         if (sourceHD) {
             this._zvuiHDButton = new ZvuiHDButton(this);
             player.addChild(this._zvuiHDButton);
+        }
+
+        if (typeof zoomIn === 'function') {
+            this._zvuiZoomButton = new ZvuiZoomButton(this);
+            player.addChild(this._zvuiZoomButton);
         }
     };
 
@@ -399,6 +406,7 @@ ProductVideo.propTypes = {
     source: PropTypes.string.isRequired,
     sourceHD: PropTypes.string,
     poster: PropTypes.string,
+    zoomIn: PropTypes.func,
     skin: PropTypes.string,
     bigPlayButton: PropTypes.bool,
     customSkinClass: PropTypes.string,
