@@ -49,6 +49,7 @@ $vjs-base-class: vjs;
     background-color: #fff !important;
     > video {
         width: 100%;
+        height: auto !important;
     }
 
     /* This used to work for parent element of button divs */

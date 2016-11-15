@@ -25387,6 +25387,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var container = this.player();
 	            var zoomIn = container.props.zoomIn;
 
+	            container._player.pause();
+
 	            if (typeof zoomIn === 'function') {
 	                zoomIn.call(this);
 	            }

@@ -23,6 +23,8 @@ class ZvuiZoomButton extends Button {
             zoomIn,
         } = container.props;
 
+        container._player.pause();
+
         if (typeof zoomIn === 'function') {
             zoomIn.call(this);
         }
