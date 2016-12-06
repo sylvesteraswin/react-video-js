@@ -126,8 +126,8 @@ $vjs-base-class: vjs;
             border-radius: .3em;
             transition: opacity .4s;
             opacity: 0;
-            margin-top: -.75em;
-            margin-left: -1.5em;
+            margin-top: -1em;
+            margin-left: -1em;
             font-family: 'VideoJS';
         }
         &-pause-button {
@@ -204,6 +204,8 @@ $vjs-base-class: vjs;
             border-radius: 50%;
             width: 2em;
             height: 2em;
+            margin-top: -1em;
+            margin-left: -1em;
             line-height: 2em;
             background-color: rgba(#fff, .7);
             transition: background-color .3s ease;
