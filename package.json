@@ -1,7 +1,7 @@
 {
   "name": "react-video-js",
   "moduleName": "ProductVideo",
-  "version": "0.1.95",
+  "version": "0.1.96",
   "description": "React video container with videojs libaray.",
   "main": "build/react-video-js",
   "browser": "build/react-video-js",

@@ -337,6 +337,9 @@ class ProductVideo extends Component {
         }
     };
 
+    getUid = () => this.state.uid;
+    getVideoId = () => this.refs[BASE_CLASS].id;
+
     setUpPlayer = () => {
         const {
             source,
