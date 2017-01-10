@@ -13,6 +13,11 @@ class App extends Component {
         console.log('I AM ZOOMED IN');
     };
 
+    componentDidMount = () => {
+        console.log('Uid:', this.pv.getUid());
+        console.log('VideoId:', this.pv.getVideoId());
+    }
+
     render = () => {
         return (
             <section
